@@ -1,0 +1,20 @@
+execute sp_execute_external_script
+@language = N'Python',
+@script = N'
+import pyodbc
+from sqlalchemy import create_engine
+import urllib
+import sqlalchemy as sql
+import pandas as pd
+engine = sql.engine.create_engine(''postgresql://usuario:senha@servidor/banco'')
+df = pd.read_sql_query("SELECT DISTINCT numero_guia, protocolo   FROM documento_guia a   INNER JOIN documento_peg b ON a.documento_peg_id = b.id;", engine)
+#conecta no banco de BI
+server = "reports.interfile.com.br"
+database = "banco"
+username = "usuario"
+password = "senha"
+params = urllib.parse.quote_plus(r"DRIVER={ODBC Driver 13 for SQL Server};SERVER="+server+";DATABASE="+database+";UID="+username+";PWD="+ password)
+conn_str = "mssql+pyodbc:///?odbc_connect={}".format(params)
+engine = create_engine(conn_str)
+#carrega o dataframe no banco
+df.to_sql(name="STG_PORTO_SEGURO_TESTE_OCR",con=engine, if_exists="replace",index=False)';
