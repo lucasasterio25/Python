@@ -1,0 +1,15 @@
+
+EXEC sp_execute_external_script @language = N'Python', 
+@script = N'
+import requests
+import json
+import urllib
+import pandas as pd
+
+myRequest=requests.get("http://bpm-hml.interfile.com.br/engine-rest/history/task")
+myList = json.loads(myRequest.content.decode(''utf-8''))
+
+myDf = pd.DataFrame.from_dict(myList)
+
+OutputDataSet = myDf[["activityInstanceId","assignee","priority","deleteReason","due","duration","name","processDefinitionId","startTime", "taskDefinitionKey"]]
+';
