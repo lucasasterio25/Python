@@ -1,0 +1,35 @@
+import sys
+import json
+import urllib
+import urllib as urllib2
+import time
+from urllib import error as urlliberror
+from urllib import request as urllibRequest
+import requests
+
+POWER_BI_RESOURCE_ENDPOINT = "https://analysis.windows.net/powerbi/api"
+MICROSOFT_OAUTH2_API_ENDPOINT = "https://login.windows.net/common/oauth2/token/"
+
+power_bi_group = 'eaee6f29-08fe-4559-bc9c-b3ee41b83ddd'
+power_bi_dataset = 'a610472e-6dcc-4400-ab9f-baa387abbd5d'
+power_bi_username = 'adalberto.silvestre@portoseguro.com.br'
+power_bi_password = 'Kud029046'
+power_bi_client_id = 'c2be24de-40fe-4c56-b333-16ac544996b7'
+power_bi_client_secret = "fUjCSWq/G2FIPxbcAWg4DQh0Hg8F6pUxdWdlUPgaMc4="
+
+data = {
+    'grant_type': 'password',
+    'scope': 'openid',
+    'resource': r'https://analysis.windows.net/powerbi/api',
+    'client_id': power_bi_client_id,
+    'username': power_bi_username,
+    'password': power_bi_password,
+    'client_secret': power_bi_client_secret
+}
+response = requests.post('https://login.microsoftonline.com/common/oauth2/token', data=data)
+access_token = response.json().get('access_token')
+#accessToken is received using the adal libary
+headers = {'Authorization': 'Bearer ' + access_token, 'Content-Type': 'application/json'}
+read_datasets = requests.post('https://api.powerbi.com/v1.0/myorg/datasets/a610472e-6dcc-4400-ab9f-baa387abbd5d/refreshes', headers=headers)
+#shockingly, this will result in a response 403
+print(read_datasets.text)
