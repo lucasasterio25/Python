@@ -7,8 +7,8 @@ from urllib import error as urlliberror
 from urllib import request as urllibRequest
 import requests
 
-POWER_BI_RESOURCE_ENDPOINT = "https://analysis.windows.net/powerbi/api"
-MICROSOFT_OAUTH2_API_ENDPOINT = "https://login.windows.net/common/oauth2/token/"
+POWER_BI_RESOURCE_ENDPOINT = ""
+MICROSOFT_OAUTH2_API_ENDPOINT = ""
 
 power_bi_group = ''
 power_bi_dataset = ''
@@ -20,7 +20,7 @@ power_bi_client_secret = ''
 data = {
     'grant_type': 'password',
     'scope': 'openid',
-    'resource': r'https://analysis.windows.net/powerbi/api',
+    'resource': r'hwerbi/api',
     'client_id': power_bi_client_id,
     'username': power_bi_username,
     'password': power_bi_password,
@@ -30,6 +30,6 @@ response = requests.post('https://login.microsoftonline.com/common/oauth2/token'
 access_token = response.json().get('access_token')
 #accessToken is received using the adal libary
 headers = {'Authorization': 'Bearer ' + access_token, 'Content-Type': 'application/json'}
-read_datasets = requests.post('https://api.powerbi.com/v1.0/myorg/datasets/jj/refreshes', headers=headers)
+read_datasets = requests.post('https:/asets/jj/refreshes', headers=headers)
 #shockingly, this will result in a response 403
 print(read_datasets.text)
